@@ -7,6 +7,9 @@ import {
 import { State, assert } from "@proto-kit/protocol";
 import { PublicKey } from "o1js";
 
+
+
+
 @runtimeModule()
 export class Admin extends RuntimeModule<Record<string, never>> {
   @state() public admin = State.from<PublicKey>(PublicKey);
