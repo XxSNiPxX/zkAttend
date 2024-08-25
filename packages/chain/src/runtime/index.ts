@@ -3,16 +3,26 @@ import { Faucet } from "./faucet";
 import { ModulesConfig } from "@proto-kit/common";
 import { Locks } from "./locks";
 import { Balances } from "./balances";
+import { GeoFencing } from "./geofencing";
+
 import { SetDelegateProposal } from "./governance/set-delegate-proposal";
 import { OutgoingMessages } from "./outgoing-messages";
 import { TokenRegistry } from "./token-registry";
 import { XYK } from "./xyk/xyk";
 import { Admin } from "./admin";
+import { Field, Poseidon, PrivateKey,PublicKey} from "o1js";
+const PRIVATE_KEY_1 = "EKEU31uonuF2rhG5f8KW4hRseqDjpPVysqcfKCKxqvs7x5oRviN1"
+let oraclePrivateKey: PrivateKey;
+let oraclePublicKey: PublicKey;
+
+oraclePrivateKey = PrivateKey.fromBase58(PRIVATE_KEY_1);
+oraclePublicKey = oraclePrivateKey.toPublicKey();
 
 export const modules = {
   Faucet,
   Locks,
   Admin,
+  GeoFencing,
   Balances: Balances,
   SetDelegateProposal,
   OutgoingMessages,
@@ -26,6 +36,9 @@ export const config: ModulesConfig<
 > = {
   Balances: {
     totalSupply: Balance.from(1_000_000_000),
+  },
+  GeoFencing:{
+oraclePublicKey:oraclePublicKey,
   },
   Admin:{},
   Faucet: {},
