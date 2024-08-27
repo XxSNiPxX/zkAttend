@@ -62,7 +62,6 @@ describe("GeoFencing integration", () => {
            lat: Field(1991),
            long: Field(2222),
            radius: Field(1000),
-           isActive: Bool(false),
 
 
        });
@@ -70,6 +69,7 @@ describe("GeoFencing integration", () => {
 
        const geoFenceSignature = Signature.create(oraclePrivateKey, GeoFence.toFields(geoFenceData));
        //
+       console.log(GeoFence.toFields(geoFenceData))
        const signedGeoFence = new SignedGeoFence({
            signature: geoFenceSignature,
            GeoFence: geoFenceData,
