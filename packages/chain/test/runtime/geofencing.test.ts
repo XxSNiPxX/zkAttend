@@ -21,7 +21,6 @@ describe("GeoFencing integration", () => {
     let alicePublicKey: PublicKey;
 
 
-
   let geoFencing: GeoFencing;
   const PRIVATE_KEY_1 = "EKEU31uonuF2rhG5f8KW4hRseqDjpPVysqcfKCKxqvs7x5oRviN1"
   let oraclePrivateKey: PrivateKey;
@@ -53,63 +52,83 @@ describe("GeoFencing integration", () => {
     // await appChain.produceBlock();
   });
 
+
+
   it("should set a geofence with valid oracle data", async () => {
 
 
-    //
-    // const geoFenceData = new GeoFence({
-    //        lat: Field(1991),
-    //        long: Field(2222),
-    //        radius: Field(1000),
-    //        isActive: Bool(false),
-    //
-    //
-    //    });
-    //
-    //
-    //    const geoFenceSignature = Signature.create(oraclePrivateKey, GeoFence.toFields(geoFenceData));
-    //    //
-    //    const signedGeoFence = new SignedGeoFence({
-    //        signature: geoFenceSignature,
-    //        GeoFence: geoFenceData,
-    //    });
-    //
-    //    //
-    //    const geoFencing = appChain.runtime.resolve("GeoFencing");
+
+    const geoFenceData = new GeoFence({
+           lat: Field(1991),
+           long: Field(2222),
+           radius: Field(1000),
+           isActive: Bool(false),
+
+
+       });
+
+
+       const geoFenceSignature = Signature.create(oraclePrivateKey, GeoFence.toFields(geoFenceData));
        //
-       // const tx = await appChain.transaction(alicePublicKey, async () => {
-       //     await geoFencing.setGeoFence(signedGeoFence);
-       // });
+       const signedGeoFence = new SignedGeoFence({
+           signature: geoFenceSignature,
+           GeoFence: geoFenceData,
+       });
+
+       //
+       const geoFencing = appChain.runtime.resolve("GeoFencing");
+
+       const tx = await appChain.transaction(alicePublicKey, async () => {
+           await geoFencing.setGeoFence(signedGeoFence);
+       });
 
 
-       const map = new MerkleMap();
-         const key = Poseidon.hash(alicePublicKey.toFields());
-         map.set(key, Bool(true).toField());
-         const witness = map.getWitness(key);
-
-         async function mockProof(
-           publicOutput: RSVPPublicOutput
-         ): Promise<RSVPedProof> {
-           const [, proof] = Pickles.proofOfBase64(await dummyBase64Proof(), 2);
-           return new RSVPedProof({
-             proof: proof,
-             maxProofsVerified: 2,
-             publicInput: undefined,
-             publicOutput,
-           });
-         }
-
-         const nullifier = Nullifier.fromJSON(
-      Nullifier.createTestNullifier(message, alicePrivateKey)
-    );
 
 
-    const geoFenceSignature1 = Signature.create(oraclePrivateKey, nullifier.getPublicKey().toFields());
 
-    const rsvpProof = await mockProof(canRSVP(witness, nullifier,geoFenceSignature1));
-    const tx = appChain.transaction(alicePublicKey, async () => {
-          await geoFencing.rsvp(rsvpProof);
-        });
+
+       const bobKey = PrivateKey.random();
+       const bob = bobKey.toPublicKey();
+       appChain.setSigner(bobKey);
+       alicePrivateKey = PrivateKey.fromBase58(PRIVATE_KEY_0);
+         alicePublicKey = alicePrivateKey.toPublicKey();
+
+
+      const map = new MerkleMap();
+        const key = Poseidon.hash(bob.toFields());
+        map.set(key, Bool(true).toField());
+        const witness = map.getWitness(key);
+
+        async function mockProof(
+          publicOutput: RSVPPublicOutput
+        ): Promise<RSVPedProof> {
+          const [, proof] = Pickles.proofOfBase64(await dummyBase64Proof(), 2);
+          return new RSVPedProof({
+            proof: proof,
+            maxProofsVerified: 2,
+            publicInput: undefined,
+            publicOutput,
+          });
+        }
+
+        const nullifier = Nullifier.fromJSON(
+     Nullifier.createTestNullifier(message, bobKey)
+     );
+
+
+     let test=nullifier.getPublicKey().toFields()
+     let test2=alicePublicKey.toFields()
+     const geoFenceSignature1 = Signature.create(oraclePrivateKey, [test[0],test[1],test2[0],test[1]]);
+
+     const rsvpProof = await mockProof(canRSVP(witness, nullifier,geoFenceSignature1,alicePublicKey));
+     const tx1 = appChain.transaction(bob, async () => {
+         await geoFencing.rsvp(rsvpProof);
+       });
+
+
+
+
+
 
        // await tx.sign();
        // await tx.send();
@@ -146,6 +165,16 @@ describe("GeoFencing integration", () => {
     // expect(storedGeoFence.isSome).toBeTruthy();
     // expect(storedGeoFence.value.owner.equals(senderKey.toPublicKey())).toBe(true);
   });
+
+
+  it("should send a req t rsvp with valid oracle data", async () => {
+
+
+});
+
+
+
+
   //
   // it("should not allow setting a second geofence for the same sender", async () => {
   //   const geoFenceData = new GeoFence({

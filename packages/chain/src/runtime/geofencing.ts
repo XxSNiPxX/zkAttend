@@ -15,6 +15,7 @@ const ORACLE_PUBLIC_KEY =
   export class RSVPPublicOutput extends Struct({
     root: Field,
     nullifier: Field,
+    geofenceid:PublicKey
   }) {}
 
   export const message: Field[] = [Field(0)];
@@ -22,7 +23,8 @@ const ORACLE_PUBLIC_KEY =
   export function canRSVP(
     witness: MerkleMapWitness,
     nullifier: Nullifier,
-    signature: Signature
+    signature: Signature,
+    geofenceid:PublicKey,
   ): RSVPPublicOutput {
     const PRIVATE_KEY_1 = "EKEU31uonuF2rhG5f8KW4hRseqDjpPVysqcfKCKxqvs7x5oRviN1"
     const PRIVATE_KEY_0 = "EKE1h2CEeYQxDaPfjSGNNB83tXYSpn3Cqt6B3vLBHuLixZLApCpd"
@@ -32,8 +34,12 @@ const ORACLE_PUBLIC_KEY =
 
     oraclePrivateKey = PrivateKey.fromBase58(PRIVATE_KEY_1);
     oraclePublicKey = oraclePrivateKey.toPublicKey();
+    let test=nullifier.getPublicKey().toFields()
+    let test2=geofenceid.toFields()
+    console.log(test[0],test[1],test2[0],test[2])
 
-    const isValid = signature.verify(oraclePublicKey, nullifier.getPublicKey().toFields());
+
+    const isValid = signature.verify(oraclePublicKey, [test[0],test[1],test2[0],test[1]]);
     Provable.log(isValid);
     isValid.assertTrue('Oracle data is not valid!');
 
@@ -50,6 +56,8 @@ const ORACLE_PUBLIC_KEY =
     return new RSVPPublicOutput({
       root: computedRoot,
       nullifier: nullifier.key(),
+      geofenceid:geofenceid
+
     });
   }
 
@@ -58,7 +66,7 @@ const ORACLE_PUBLIC_KEY =
   publicOutput: RSVPPublicOutput,
   methods: {
     canRSVP: {
-      privateInputs: [MerkleMapWitness, Nullifier,Signature],
+      privateInputs: [MerkleMapWitness, Nullifier,Signature,PublicKey],
       method: canRSVP,
     },
   },
@@ -79,10 +87,7 @@ export class GeoFence extends Struct({
   long:Field,
   radius:Field,
   isActive:Bool,
-
-
 }) {}
-
 
 export class SignedGeoFence extends Struct({
   signature: Signature,
@@ -100,6 +105,11 @@ export class GeoFencing extends RuntimeModule<GeoFencingConfig> {
     PublicKey,
     GeoFence
   );
+  @state() public nullifiers = StateMap.from<Field, Bool>(Field, Bool);
+
+
+
+
   @state() public oraclePublicKey = State.from<PublicKey>(PublicKey);
 
 
@@ -116,7 +126,10 @@ export class GeoFencing extends RuntimeModule<GeoFencingConfig> {
 
     oraclePrivateKey = PrivateKey.fromBase58(PRIVATE_KEY_1);
     oraclePublicKey = oraclePrivateKey.toPublicKey();
-
+    const bobKey = PrivateKey.random();
+    const bob = bobKey.toPublicKey();
+    const abobKey = PrivateKey.random();
+    const abob = bobKey.toPublicKey();
 
 
     // const oraclePublicKey = this.oraclePublicKey.get().value;
@@ -124,17 +137,44 @@ export class GeoFencing extends RuntimeModule<GeoFencingConfig> {
     const signature = oracleData.signature;
     const isValid = oracleData.signature.verify(oraclePublicKey, GeoFence.toFields(oracleData.GeoFence));
     Provable.log(isValid);
-      isValid.assertTrue('Oracle data is not valid!');
+    isValid.assertTrue('Oracle data is not valid!');
     // assert(isValid.toBe(true), "Oracle data is not valid!");
+    this.geofences.set(bob,oracleData.GeoFence)
     this.geofences.set(this.transaction.sender.value,oracleData.GeoFence)
+
+    this.geofences.set(abob,oracleData.GeoFence)
+    const a1senderHasGeoFence = this.geofences.get(bob);
+    const a2senderHasGeoFence = this.geofences.get(abob);
+    Provable.log(a1senderHasGeoFence,a2senderHasGeoFence,"CRETATED",this.transaction.sender.value);
+
     const asenderHasGeoFence = this.geofences.get(this.transaction.sender.value);
-    Provable.log(asenderHasGeoFence.value.lat.value.toString());
+    Provable.log(this.geofences.path,"CRETATED",this.transaction.sender.value);
   }
 
-  @runtimeMethod()
     public rsvp(rsvpProof: RSVPedProof) {
       rsvpProof.verify();
+
+      const PRIVATE_KEY_0 = "EKE1h2CEeYQxDaPfjSGNNB83tXYSpn3Cqt6B3vLBHuLixZLApCpd"
+
+      let o1raclePrivateKey: PrivateKey;
+      let o1raclePublicKey: PublicKey;
+
+      o1raclePrivateKey = PrivateKey.fromBase58(PRIVATE_KEY_0);
+      o1raclePublicKey = o1raclePrivateKey.toPublicKey();
+
+
       Provable.log(rsvpProof.publicOutput);
+      const asenderHasGeoFence = this.geofences.get(o1raclePublicKey);
+      Provable.log(o1raclePublicKey,asenderHasGeoFence,"SENDER EXISTS",rsvpProof.publicOutput.geofenceid);
+      let test=rsvpProof.publicOutput.geofenceid.toFields()
+      const key = Poseidon.hash([rsvpProof.publicOutput.nullifier,test[0],test[1]]);
+      Provable.log(key);
+
+      const isNullifierUsed = this.nullifiers.get(
+        key
+      );
+      assert(isNullifierUsed.value.not(), "Nullifier has already been used");
+      this.nullifiers.set(key, Bool(true));
 
 
     }
