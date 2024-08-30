@@ -118,8 +118,8 @@ describe("GeoFencing integration", () => {
 
      let test=nullifier.getPublicKey().toFields()
      let test2=alicePublicKey.toFields()
-     const geoFenceSignature1 = Signature.create(oraclePrivateKey, [test[0],test[1],test2[0],test[1]]);
-
+     const geoFenceSignature1 = Signature.create(oraclePrivateKey, [test[0],test[1],test2[0],test2[1]]);
+     console.log(geoFenceSignature1)
      const rsvpProof = await mockProof(canRSVP(witness, nullifier,geoFenceSignature1,alicePublicKey));
      const tx1 = appChain.transaction(bob, async () => {
          await geoFencing.rsvp(rsvpProof);

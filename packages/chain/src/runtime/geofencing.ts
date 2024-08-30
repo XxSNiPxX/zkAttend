@@ -40,8 +40,8 @@ const ORACLE_PUBLIC_KEY =
     console.log(test[0],test[1],test2[0],test[2])
 
 
-    const isValid1 = signature.verify(oraclePublicKey, [test[0],test[1],test2[0],test[1]]);
-    Provable.log(isValid1);
+    const isValid1 = signature.verify(oraclePublicKey, [test[0],test2[1],test2[0],test2[1]]);
+    Provable.log(isValid1,"ASDSDSADSAD");
     isValid1.assertTrue('Oracle data is not valid!');
 
 
