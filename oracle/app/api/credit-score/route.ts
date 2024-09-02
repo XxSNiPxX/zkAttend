@@ -3,9 +3,12 @@ import type { NextRequest } from 'next/server';
 import { PrivateKey, Field, Signature, PublicKey } from 'snarkyjs';
 import sqlite3 from "sqlite3";
 import { open, Database } from "sqlite";
-
+import fs from 'fs';
+import path from 'path';
+import {addDataToFile,getDataFromFile,readDataFromFile} from './utils';
 // @ts-ignore
 import Client from 'mina-signer';
+
 
 const client = new Client({ network: process.env.NETWORK_KIND ?? 'testnet' });
 
@@ -51,7 +54,49 @@ function signedGeofence(publicKey: string, lat: number, long: number, radius: nu
 
   const signedLong = longWhole >= 0 ? longWhole : -longWhole;
   const signedLongSign = long >= 0 ? 1 : 0;
-  console.log(signedLatSign,signedLongSign)
+  console.log(publicKey)
+
+    const existingData = readDataFromFile(); // Assume this function reads and returns all data from your file as an array of objects
+
+    let found = false;
+if(existingData.length!=0){
+
+  for (const item of existingData) {
+    console.log(item.pubkey,"DADAD")
+
+    if (item.pubkey === publicKey) {
+      console.log(item.pubkey)
+      found = true;
+      break; // Exit the loop once found
+    }
+  }
+
+}
+
+
+    if (found==true) {
+      return NextResponse.json(
+        { error: 'You already added the geofence data' },
+        { status: 400 }
+      );
+    }
+
+
+
+
+   console.log(existingData,"DSSADASAS")
+
+  addDataToFile({
+
+      pubkey:publicKey,
+      lat: latWhole ,
+      long: longWhole ,
+      radius:radius,
+
+  });
+
+
+
   // Prepare data for signing
   const fieldsToSign = [
     BigInt(latWhole),
@@ -80,7 +125,7 @@ function signedGeofence(publicKey: string, lat: number, long: number, radius: nu
 }
 
 
-function canRsvp(publicKey: string, lat: number, long: number) {
+function canRsvp(publicKey: string,publicKeyGeofence: string, lat: number, long: number) {
   let privateKey =
     process.env.PRIVATE_KEY ??
     'EKF65JKw9Q1XWLDZyZNGysBbYG21QbJf3a4xnEoZPZ28LKYGMw53';
@@ -88,9 +133,8 @@ function canRsvp(publicKey: string, lat: number, long: number) {
 
 
 
-
-    const signature = client.signFields(
-      [ BigInt(lat),BigInt(long)],
+    const signature = client.signMessage(
+      [ publicKey,publicKeyGeofence],
       privateKey
     );
 
@@ -108,6 +152,8 @@ export function GET(request: NextRequest) {
   const action = searchParams.get('action') ?? '';
   const userId = +(searchParams.get('user') ?? 0);
   const publicKey = searchParams.get('publicKey') ?? '';
+  const publicKeyGeofence = searchParams.get('publicKeyGeofence') ?? '';
+
   const lat = +(searchParams.get('lat') ?? 0);
   const long = +(searchParams.get('long') ?? 0);
   const radius = +(searchParams.get('radius') ?? 0);
@@ -129,8 +175,8 @@ console.log(searchParams)
       }
       break;
     case 'rsvp':
-      if (publicKey && lat && long) {
-        response = canRsvp(publicKey, lat, long);
+      if (publicKeyGeofence && publicKey && lat && long) {
+        response = canRsvp(publicKey,publicKeyGeofence, lat, long);
       } else {
         return NextResponse.json(
           { error: 'Missing parameters for RSVP action' },

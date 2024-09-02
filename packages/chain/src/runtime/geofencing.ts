@@ -6,7 +6,7 @@ import {
 } from "@proto-kit/module";
 import { State, assert,StateMap } from "@proto-kit/protocol";
 import { PublicKey,Field,UInt64,Bool,Struct,Signature,Provable,PrivateKey ,Experimental,  MerkleMapWitness,
-  Nullifier,Poseidon} from "o1js";
+  Nullifier,Poseidon,CircuitString} from "o1js";
 
 const ORACLE_PUBLIC_KEY =
   'B62qoAE4rBRuTgC42vqvEyUqCGhaZsW58SKVW4Ht8aYqP9UTvxFWBgy';
@@ -37,10 +37,16 @@ const ORACLE_PUBLIC_KEY =
     let test=nullifier.getPublicKey().toFields()
 
     let test2=geofenceid.toFields()
-    console.log(test[0],test[1],test2[0],test[2])
+
+    let test3=nullifier.getPublicKey().toBase58();
+    let test4=geofenceid.toBase58();
+    console.log(test4,test3,test3.concat(test4))
+    let test5=test3.concat(test4)
+    const fieldURL = CircuitString.fromString(test5).hash();
 
 
-    const isValid1 = signature.verify(oraclePublicKey, [test[0],test2[1],test2[0],test2[1]]);
+
+    const isValid1 = signature.verify(oraclePublicKey, [fieldURL]);
     Provable.log(isValid1,"ASDSDSADSAD");
     isValid1.assertTrue('Oracle data is not valid!');
 
@@ -86,6 +92,8 @@ export class RSVPedProof extends Experimental.ZkProgram.Proof(rsvped) {}
 export class GeoFence extends Struct({
   lat:Field,
   long:Field,
+  latSign:Field,
+  longSign:Field,
   radius:Field,
 }) {}
 
@@ -143,6 +151,7 @@ export class GeoFencing extends RuntimeModule<GeoFencingConfig> {
     Provable.log(asenderHasGeoFence,"CRETATED",this.transaction.sender.value);
   }
 
+
     public rsvp(rsvpProof: RSVPedProof) {
       rsvpProof.verify();
 
@@ -154,7 +163,7 @@ export class GeoFencing extends RuntimeModule<GeoFencingConfig> {
 
       let test=rsvpProof.publicOutput.geofenceid.toFields()
       const key = Poseidon.hash([rsvpProof.publicOutput.nullifier,test[0],test[1]]);
-      Provable.log(key);
+      Provable.log(rsvpProof.publicOutput.nullifier);
 
       const isNullifierUsed = this.nullifiers.get(
         key

@@ -2,7 +2,7 @@ import "reflect-metadata";
 import { log } from "@proto-kit/common";
 import { TestingAppChain } from "@proto-kit/sdk";
 
-import { Field, Poseidon, PrivateKey, PublicKey, Signature, UInt64, Bool,Nullifier,MerkleMap } from "o1js";
+import { Field, Poseidon, PrivateKey, PublicKey, Signature, UInt64, Bool,Nullifier,MerkleMap,CircuitString } from "o1js";
 import { config, modules } from "../../src/runtime";
 import { GeoFencing, SignedGeoFence, GeoFence, RSVPedProof, RSVPPublicOutput, canRSVP,message } from "../../src/runtime/geofencing";
 import { fromRuntime } from "../testing-appchain";
@@ -61,6 +61,8 @@ describe("GeoFencing integration", () => {
     const geoFenceData = new GeoFence({
            lat: Field(1991),
            long: Field(2222),
+           latSign:Field(1),
+           longSign:Field(0),
            radius: Field(1000),
 
 
@@ -118,7 +120,14 @@ describe("GeoFencing integration", () => {
 
      let test=nullifier.getPublicKey().toFields()
      let test2=alicePublicKey.toFields()
-     const geoFenceSignature1 = Signature.create(oraclePrivateKey, [test[0],test[1],test2[0],test2[1]]);
+
+     let test3=nullifier.getPublicKey().toBase58();
+     let test4=alicePublicKey.toBase58();
+     console.log(test4,test3,test3.concat(test4))
+     let test5=test3.concat(test4)
+     const fieldURL = CircuitString.fromString(test5).hash();
+
+     const geoFenceSignature1 = Signature.create(oraclePrivateKey, [fieldURL]);
      console.log(geoFenceSignature1)
      const rsvpProof = await mockProof(canRSVP(witness, nullifier,geoFenceSignature1,alicePublicKey));
      const tx1 = appChain.transaction(bob, async () => {
