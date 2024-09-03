@@ -2,6 +2,14 @@
 
 This repository is a monorepo aimed at kickstarting application chain development using the Protokit framework.
 
+
+## Start Oracle
+
+- cd geofence_oracle
+- npm install
+- npm run dev
+
+
 ## Quick start
 
 The monorepo contains 1 package and 1 app:
@@ -39,7 +47,7 @@ You can use those environments to configure the mode of operation for your appch
 
 The starter kit comes with a set of pre-configured environments:
 - `inmemory`: Runs everything in-memory without persisting the data. Useful for early stages of runtime development.
-- `development`: Runs the sequencer locally and persists all state in databases running in docker. 
+- `development`: Runs the sequencer locally and persists all state in databases running in docker.
 - `sovereign`: Runs your appchain fully in docker (except the UI) for testnet deployments without settlement.
 
 Every command you execute should follow this pattern:
@@ -60,7 +68,7 @@ pnpm env:inmemory dev --filter web
 pnpm env:inmemory dev --filter chain
 ```
 
-> Be aware, the dev command will automatically restart your application when your sources change. 
+> Be aware, the dev command will automatically restart your application when your sources change.
 > If you don't want that, you can alternatively use `pnpm run build` and `pnpm run start`
 
 Navigate to `localhost:3000` to see the example UI, or to `localhost:8080/graphql` to see the GQL interface of the locally running sequencer.
@@ -95,7 +103,7 @@ pnpm env:development dev --filter web
 
 ### Deploying to a server
 
-When deploying to a server, you should push your code along with your forked starter-kit to some repository, 
+When deploying to a server, you should push your code along with your forked starter-kit to some repository,
 then clone it on your remote server and execute it.
 
 ```zsh
