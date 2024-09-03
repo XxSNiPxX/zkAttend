@@ -1,3 +1,4 @@
+import "reflect-metadata"
 import { TestingAppChain } from "@proto-kit/sdk";
 import { method, PrivateKey } from "o1js";
 import { Balances } from "../../../src/runtime/modules/balances";
