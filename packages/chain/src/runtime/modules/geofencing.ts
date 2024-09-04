@@ -20,6 +20,9 @@ import {
   CircuitString,
   ZkProgram,
 } from "o1js";
+import { Balances } from "./balances";
+import { Balance, TokenId } from "@proto-kit/library";
+import { inject } from "tsyringe";
 
 const ORACLE_PUBLIC_KEY = 'B62qphyUJg3TjMKi74T2rF8Yer5rQjBr1UyEG7Wg9XEYAHjaSiSqFv1';
 
@@ -94,6 +97,10 @@ type GeoFencingConfig = Record<string, never>;
 
 @runtimeModule()
 export class GeoFencing extends RuntimeModule<GeoFencingConfig> {
+
+
+
+
   @state() public geofences = StateMap.from<PublicKey, GeoFence>(
     PublicKey,
     GeoFence
@@ -101,9 +108,12 @@ export class GeoFencing extends RuntimeModule<GeoFencingConfig> {
 
   @state() public nullifiers = StateMap.from<Field, Bool>(Field, Bool);
 
-  @state() public commitment = State.from<Field>(Field);
 
-  @state() public oraclePublicKey = State.from<PublicKey>(PublicKey);
+  public constructor(@inject("Balances") public balances: Balances) {
+    super();
+  }
+
+
 
   @runtimeMethod()
   public async setGeoFence(oracleData: SignedGeoFence) {
@@ -150,5 +160,10 @@ Provable.log(isValid,"isValid")
     assert(isNullifierUsed.value.not(), "Nullifier has already been used");
 
     await this.nullifiers.set(key, Bool(true));
+    await this.balances.mint(
+      TokenId.from(0),
+      this.transaction.sender.value,
+      Balance.from(1000)
+    );
   }
 }
