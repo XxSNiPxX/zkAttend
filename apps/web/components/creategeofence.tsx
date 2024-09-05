@@ -4,12 +4,24 @@ import { Input } from "@/components/ui/input";
 import { Form, FormControl, FormField, FormItem, FormLabel } from "./ui/form";
 import { useForm } from "react-hook-form";
 import { Button } from "./ui/button";
+import {
+  GeoFencing,
+  SignedGeoFence,
+  GeoFence,
+  RSVPedProof,
+  RSVPPublicOutput,
+  canRSVP,
+  message,
+  rsvped as rsvpedProgram,
+} from "chain";
+import { useGeoFenceStore } from "@/lib/stores/geofences";
 
+console.log(GeoFence)
 export interface GeoFenceCreatorProps {
   wallet?: string;
   loading: boolean;
   onConnectWallet: () => void;
-  createGeoFence: () => void;
+  createGeoFence: (data: GeoFenceFormData) => void;
 }
 
 export interface GeoFenceFormData {
@@ -17,12 +29,20 @@ export interface GeoFenceFormData {
   long: string;
   radius:string;
   event: string;
-  details: string;
+  description: string;
 }
 
 export function GeoFenceCreator({ wallet,loading,onConnectWallet, createGeoFence }: GeoFenceCreatorProps) {
   const form = useForm<GeoFenceFormData>();
 
+    const onSubmit = (data: GeoFenceFormData) => {
+      if (!wallet) {
+        onConnectWallet();
+      } else {
+        console.log(data)
+        createGeoFence(data); // Pass form data to createGeoFence
+      }
+    };
   return (
     <Card className="w-full p-4">
       <div className="mb-2">
@@ -82,10 +102,10 @@ export function GeoFenceCreator({ wallet,loading,onConnectWallet, createGeoFence
             )}
           />
           <FormField
-            name="details"
+            name="description"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Details</FormLabel>
+                <FormLabel>Description</FormLabel>
                 <FormControl>
                   <Input {...field} placeholder="Enter event details" />
                 </FormControl>
@@ -99,10 +119,7 @@ export function GeoFenceCreator({ wallet,loading,onConnectWallet, createGeoFence
           type="submit"
           className="mt-6 w-full"
           loading={loading}
-          onClick={() => {
-            wallet ?? onConnectWallet();
-            wallet && createGeoFence();
-          }}
+                    onClick={form.handleSubmit(onSubmit)} // Use handleSubmit from react-hook-form
                   >
           Create GeoFence
         </Button>

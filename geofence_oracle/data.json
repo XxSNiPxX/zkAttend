@@ -1,52 +1,12 @@
 [
   {
-    "pubkey": "B62qncByMyX9EiX9Nc6DMubQB4HTxJTWhDECQfJFFiEY6QJHzq6FYiX",
-    "lat": 377749,
+    "pubkey": "B62qiTuAisQfixMZd9vkRXRWpVmjjDpprwjbPdw3s81x14iaBK361EG",
+    "lat": 130000,
     "signedLatSign": 1,
-    "long": 1224194,
-    "signedLongSign": 0,
-    "radius": 100,
-    "event": "Myevent",
-    "description": "some description"
-  },
-  {
-    "pubkey": "B62qpDUFQCK7BA6LpF2dLhuAuHJwtc1SoVu9ZwKnRv286JM9ZaiZuE3",
-    "lat": 377749,
-    "signedLatSign": 1,
-    "long": 1224194,
-    "signedLongSign": 0,
-    "radius": 100,
-    "event": "Myevent",
-    "description": "some description"
-  },
-  {
-    "pubkey": "B62qkyxngi2Yk1Xh3pZPUCca2HCULLwfRoNpGmn5YZenqwW2MhUyxTN",
-    "lat": 377749,
-    "signedLatSign": 1,
-    "long": 1224194,
-    "signedLongSign": 0,
-    "radius": 100,
-    "event": "Myevent",
-    "description": "some description"
-  },
-  {
-    "pubkey": "B62qr4wBhEYtpruMhpLrqP286ZppXgsgHwQ5yiNonqBSsShhdf1g1VH",
-    "lat": 377749,
-    "signedLatSign": 1,
-    "long": 1224194,
-    "signedLongSign": 0,
-    "radius": 100,
-    "event": "Myevent",
-    "description": "some description"
-  },
-  {
-    "pubkey": "B62qmvnCVAp6fEh6Qnm6YXBYo2VvXDFjFNAd1LBK46nny2eAQPUv8oU",
-    "lat": 377749,
-    "signedLatSign": 1,
-    "long": 1224194,
-    "signedLongSign": 0,
-    "radius": 100,
-    "event": "Myevent",
-    "description": "some description"
+    "long": 802000,
+    "signedLongSign": 1,
+    "radius": 10000,
+    "event": "rwsr",
+    "description": "resr"
   }
 ]

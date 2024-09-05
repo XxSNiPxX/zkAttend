@@ -1,5 +1,16 @@
 import { AuroSigner, ClientAppChain } from "@proto-kit/sdk";
 import runtime from "../runtime";
+import {
+  GeoFencing,
+  SignedGeoFence,
+  GeoFence,
+  RSVPedProof,
+  RSVPPublicOutput,
+  canRSVP,
+  message,
+  rsvped,
+} from "../runtime/modules/geofencing";
+
 
 const appChain = ClientAppChain.fromRuntime(runtime.modules, AuroSigner);
 
@@ -14,3 +25,13 @@ appChain.configurePartial({
 });
 
 export const client = appChain;
+export {
+  GeoFencing,
+  SignedGeoFence,
+  GeoFence,
+  RSVPedProof,
+  RSVPPublicOutput,
+  canRSVP,
+  message,
+  rsvped,
+}

@@ -4,6 +4,10 @@ const { CircuitString,Signature,PublicKey,PrivateKey,Encoding,Poseidon } = requi
 import {addDataToFile,getDataFromFile,readDataFromFile} from './utils';
 
 export default function handler(req, res) {
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+
  const { publicKey, publicKeyGeofence, lat, long } = req.query;
  let privateKey =
  process.env.PRIVATE_KEY ??

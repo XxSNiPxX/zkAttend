@@ -5,6 +5,13 @@ import {addDataToFile,getDataFromFile,readDataFromFile} from './utils';
 const { CircuitString,Signature,PublicKey,PrivateKey,Encoding,Poseidon,Field } = require("o1js");
 
 export default function handler(req, res) {
+
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+
+
+
   const { publicKey, lat, long,radius,events,description } = req.query;
   console.log(events,description)
   let privateKey =
@@ -32,6 +39,13 @@ export default function handler(req, res) {
         const eventhash = Poseidon.hash(event_field);
         const descriptionhash = Poseidon.hash(description_field);
 
+        console.log(latWhole,
+          signedLatSign,
+          longWhole,
+          signedLongSign,
+          _radius, // Assuming radius should also be multiplied for consistency
+          eventhash,
+          descriptionhash)
 
     const existingData = readDataFromFile(); // Assume this function reads and returns all data from your file as an array of objects
 
@@ -49,11 +63,13 @@ export default function handler(req, res) {
       }
 
     }
+    console.log(found, "found Signature");
 
     if (found==true) {
       return res.status(400).json({ status: "ERROR GEO FENCE FOR THIS PUBKEY ALREADY ADDED PRESENT" });
 
     }
+    console.log(found, "found Signature");
 
     addDataToFile({
 

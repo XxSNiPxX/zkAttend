@@ -1,6 +1,8 @@
 import Header from "@/components/header";
 import { Toaster } from "@/components/ui/toaster";
 import { useBalancesStore, useObserveBalance } from "@/lib/stores/balances";
+import { useGeoFenceStore, useObserveUserGeofence } from "@/lib/stores/geofences";
+
 import { useChainStore, usePollBlockHeight } from "@/lib/stores/chain";
 import { useClientStore } from "@/lib/stores/client";
 import { useNotifyTransactions, useWalletStore } from "@/lib/stores/wallet";
@@ -11,9 +13,11 @@ export default function AsyncLayout({ children }: { children: ReactNode }) {
   const client = useClientStore();
   const chain = useChainStore();
   const balances = useBalancesStore();
+  const geofences = useGeoFenceStore();
 
   usePollBlockHeight();
   useObserveBalance();
+  useObserveUserGeofence();
   useNotifyTransactions();
 
   useEffect(() => {
