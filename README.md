@@ -15,10 +15,10 @@ zkAttend is a decentralized Proof-of-Location system built on Mina Protocol's Pr
 2. [Architecture](#architecture)
 3. [Prerequisites](#prerequisites)
 4. [Running zkAttend](#running-zkattend)
-   - [Run in Development Mode](#run-in-development-mode)
-   - [Run with Persistence](#run-with-persistence)
-   - [Deploying to a Server](#deploying-to-a-server)
-5. [CLI Options](#cli-options)
+   - [Clone the Repository](#clone-the-repository)
+   - [Start the Oracle](#start-the-oracle)
+   - [Start the Chain](#start-the-chain)
+5. [Testing zkAttend](#testing-zkattend)
 
 ---
 
