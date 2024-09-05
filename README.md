@@ -91,9 +91,7 @@ Start by cloning the repository and navigating into the project folder:
 git clone https://github.com/XxSNiPxX/zkAttend.git
 cd zkAttend
 ```
-### 2. Start the Oracle
-
-Its important to start the oracle first:
+### 2. Start the test
 
 ```zsh
 nvm use
