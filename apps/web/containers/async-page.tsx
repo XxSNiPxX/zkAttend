@@ -35,7 +35,7 @@ export default function Home() {
             wallet={wallet.wallet}
             onConnectWallet={wallet.connectWallet}
             rsvp={rsvpstuff}
-            loading={false}
+            loading={geofencestore.loading}
           />
 
         </div>

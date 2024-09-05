@@ -14,7 +14,7 @@ import {
 import { useGeoFenceStore } from "@/lib/stores/geofences";
 import { IndividualGeoFence } from "@/lib/stores/geofences";
 import { rsvp } from "@/lib/stores/geofences";
-
+import Loader from "./ui/loader";
 
 export interface EventCardData {
   publicKey: string;
@@ -62,7 +62,11 @@ export function EventCard({
     }
   };
 
+  console.log(loading,"loadings")
+
   return (
+    <>
+        {loading && <Loader />}
     <Card className="p-4">
       <h2 className="text-xl font-bold">{eventData.event}</h2>
       <p className="text-sm text-zinc-500">{eventData.description}</p>
@@ -81,6 +85,8 @@ export function EventCard({
         RSVP
       </Button>
     </Card>
+
+        </>
   );
 }
 

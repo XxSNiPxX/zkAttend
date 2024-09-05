@@ -260,12 +260,21 @@ async setRSVP(client: Client, address: string, address_geofence: string, lat: st
       console.timeEnd("proof",proof);
       return proof;
     }
+    set((state) => {
+
+      state.loading = true;
+
+    });
 
     console.log("Starting RSVP proof generation...");
     console.log(witness, o1jsNullifier, rsvpSignature, sender,canRSVP,realProof)
     let rsvpProof = await realProof(await canRSVP(witness, o1jsNullifier, rsvpSignature, sender));
     console.log(rsvpProof);
+    set((state) => {
+      state.loading = false;
 
+    });
+  
     const tx = await client.transaction(sender, async () => {
       await geofences.rsvp(rsvpProof);
     });

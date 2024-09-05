@@ -4,11 +4,11 @@ import { cn } from "@/lib/utils";
 import { Loader2 } from "lucide-react"; // Assuming you're using Lucide Icons
 
 const loaderVariants = cva(
-  "fixed inset-0 z-[100] flex items-center justify-center bg-gray-800/50",
+  "fixed inset-0 z-[1000] flex items-center justify-center bg-gray-800/80", // Full screen overlay with high z-index
   {
     variants: {
       variant: {
-        default: "bg-gray-800/50 text-white",
+        default: "bg-gray-800/80 text-white",
       },
     },
     defaultVariants: {
@@ -28,8 +28,8 @@ const Loader = React.forwardRef<
       {...props}
     >
       <div className="relative flex items-center">
-        <Loader2 className="animate-spin h-8 w-8 text-white" />
-        <span className="ml-4 text-lg">Loading, please wait...</span>
+        <Loader2 className="animate-spin h-12 w-12 text-white" /> {/* Larger spinner */}
+        <span className="ml-4 text-lg text-white">Loading, proof compilation takes about 3 min, please bear with me,go grab a coffee....</span>
       </div>
     </div>
   );
