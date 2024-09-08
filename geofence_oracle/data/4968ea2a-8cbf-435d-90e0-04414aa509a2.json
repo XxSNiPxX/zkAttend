@@ -1,0 +1,12 @@
+[
+  {
+    "pubkey": "B62qnSJMgvCWPhLC41bSDC6Zo4C6svwPV4gr4XJEKQA1sdQBQGeYzos",
+    "lat": 377749,
+    "signedLatSign": 1,
+    "long": 1224194,
+    "signedLongSign": 0,
+    "radius": 100,
+    "event": "Myevent",
+    "description": "some description"
+  }
+]

@@ -1,0 +1,22 @@
+[
+  {
+    "pubkey": "B62qmzPrimYAET55uz5LrLgpWsFC4jW1nu3cDT6gzqtJ7NyBcZdUvHm",
+    "lat": 377749,
+    "signedLatSign": 1,
+    "long": 1224194,
+    "signedLongSign": 0,
+    "radius": 100,
+    "event": "Myevent",
+    "description": "some description"
+  },
+  {
+    "pubkey": "B62qiTuAisQfixMZd9vkRXRWpVmjjDpprwjbPdw3s81x14iaBK361EG",
+    "lat": 130000,
+    "signedLatSign": 1,
+    "long": 120000,
+    "signedLongSign": 1,
+    "radius": 1111,
+    "event": "fsdfsd",
+    "description": "fsdfsdsdf"
+  }
+]
