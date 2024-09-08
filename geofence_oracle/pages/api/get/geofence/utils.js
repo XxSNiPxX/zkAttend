@@ -1,8 +1,10 @@
 import fs from 'fs';
 import path from 'path';
+import { v4 as uuidv4 } from 'uuid'; // for generating unique file names
 
 // Define the path to the JSON file
-const dataFilePath = path.join(process.cwd(), 'data.json');
+
+const dataFilePath = path.join(process.cwd(), `data/${uuidv4()}.json`);
 
 // Utility function to read JSON data from the file
 function readDataFromFile() {

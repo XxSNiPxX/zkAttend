@@ -36,7 +36,7 @@ console.log(lat,long)
    }
 
    if (found==false) {
-     return res.status(400).json({ status: "ERROR GEO FENCE NOT FOUND KEY ALREADY ADDED PRESENT" });
+     return res.status(400).json({ status: "ERROR GEOFENCE KEY ALREADY PRESENT" });
    }
    console.log(tmpData,"TMP DATA")
    let reconstructedLat = tmpData.lat / 10000;

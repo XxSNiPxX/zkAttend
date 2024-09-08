@@ -1,0 +1,12 @@
+[
+  {
+    "pubkey": "B62qiTuAisQfixMZd9vkRXRWpVmjjDpprwjbPdw3s81x14iaBK361EG",
+    "lat": 120000,
+    "signedLatSign": 1,
+    "long": 310000,
+    "signedLongSign": 1,
+    "radius": 111111,
+    "event": "sdfadf",
+    "description": "sdfsdf"
+  }
+]

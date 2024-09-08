@@ -34,7 +34,13 @@
     "truncate-middle": "^1.0.6",
     "zod": "^3.22.4",
     "zustand": "^4.4.6",
-    "o1js": "1.6.0"
+    "o1js": "1.6.0",
+    "@types/react-leaflet": "2.8.2",
+    "esri-leaflet-geocoder": "3.0.0",
+    "leaflet": "1.7.1",
+    "leaflet-control-geocoder": "2.3.0",
+    "leaflet-overpass-layer": "2.8.3",
+    "react-leaflet": "3.2.0"
   },
   "devDependencies": {
     "@types/node": "^20",

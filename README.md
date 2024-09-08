@@ -1,6 +1,6 @@
 # zkAttend: Decentralized Proof-of-Location System
 
-zkAttend is a decentralized Proof-of-Location system built on Mina Protocol's Protokit. It leverages zero-knowledge proofs (zk-SNARKs) to privately verify a user's location without revealing sensitive data. This system is suitable for event attendance, location-based rewards, and logistics verification.
+zkAttend is a decentralized Proof-of-Location system built on Mina Protocol's Protokit. It leverages zero-knowledge proofs to privately verify a user's location without revealing sensitive data. This system is suitable for event attendance, location-based rewards, and logistics verification.
 
 ## **DISCLAIMER:**
 
